@@ -1,4 +1,4 @@
-use DataSport;
+use datasport;
 
 DROP PROCEDURE IF EXISTS RegisterUser;
 DROP PROCEDURE IF EXISTS GetAllUsers;
@@ -15,10 +15,11 @@ DROP PROCEDURE IF EXISTS GetAllPayments;
 DROP PROCEDURE IF EXISTS GetPaymentsByUserId;
 DROP PROCEDURE IF EXISTS GetProductsByCenterId;
 
-/* Procedimientos para la tabla usuarios*/
+-- --------------------------------------Procedimientos para la tabla usuarios-----------------------------------------
 -- Procedimiento para registrar un nuevo usuario
 DELIMITER $$
 CREATE PROCEDURE RegisterUser (
+    IN userId BIGINT,
     IN userFirstName VARCHAR(120),
     IN userLastName VARCHAR(50),
     IN userEmail VARCHAR(100),
@@ -29,8 +30,8 @@ CREATE PROCEDURE RegisterUser (
     IN centerId INT
 )
 BEGIN
-    INSERT INTO Usuario (Nombres, Apellidos, Email, Direccion, Telefono, Estado, Imagen, Id_Centro)
-    VALUES (userFirstName, userLastName, userEmail, userAddress, userPhone, userState, userImage, centerId);
+    INSERT INTO Usuario (Id_Usuario, Nombres, Apellidos, Email, Direccion, Telefono, Estado, Imagen, Id_Centro)
+    VALUES (userId, userFirstName, userLastName, userEmail, userAddress, userPhone, userState, userImage, centerId);
 END$$
 
 -- Procedimiento para obtener todos los usuarios
@@ -100,12 +101,14 @@ BEGIN
 END$$
 
 -- Procedimiento para obtener todos los productos
+DELIMITER $$
 CREATE PROCEDURE GetAllProducts ()
 BEGIN
     SELECT * FROM Producto;
 END$$
 
 -- Procedimiento para obtener un producto por su ID
+DELIMITER $$
 CREATE PROCEDURE GetProductById (
     IN productId INT
 )
@@ -115,6 +118,7 @@ BEGIN
 END$$
 
 -- Procedimiento para actualizar la información de un producto
+DELIMITER $$
 CREATE PROCEDURE UpdateProduct (
     IN productId INT,
     IN productName VARCHAR(100),
@@ -133,6 +137,7 @@ BEGIN
 END$$
 
 -- Procedimiento para eliminar un producto
+DELIMITER $$
 CREATE PROCEDURE DeleteProduct (
     IN productId INT
 )
@@ -143,33 +148,38 @@ END$$
 
 -- ------------------------------ Procedimiento para la tabala bienes ------------------------------
 -- Procedimiento para registrar un bien 
+DELIMITER $$
 CREATE PROCEDURE RegisterBien (
+	IN bienId INT,
     IN bienName VARCHAR(255),
     IN bienDescription TEXT,
     IN bienImage TEXT,
     IN bienQuantity BIGINT
     )
     BEGIN 
-    INSERT INTO bienes (Nombre, Descripcion, Imagen, Cantidad)
-    VALUES (bienName, bienDescription, bienImage, bienQuantity);
+    INSERT INTO bienes (Id_Bienes, Nombre, Descripcion, Imagen, Cantidad)
+    VALUES (bienId, bienName, bienDescription, bienImage, bienQuantity);
 END $$
 
 -- Procedimeinto para obtener todos los bienes
+DELIMITER $$
 CREATE PROCEDURE GetAllBienes ()
 BEGIN
 	Select * From bienes;
 END $$
 
 -- Procemiento para obtener bienes por ID
+DELIMITER $$
 CREATE PROCEDURE GetBienesById(
-	IN bienID INT
+	IN bienId INT
 )
 BEGIN 
 	Select * From bienes
-    Where Id_Bienes = bienID;
+    Where Id_Bienes = bienId;
 END $$
 
 -- Procedimiento para Actualizar un bien
+DELIMITER $$
 CREATE PROCEDURE UpdateBien (
     IN bienId INT,
     IN bienName VARCHAR(255),
@@ -184,17 +194,19 @@ begin
 END $$
  
  -- Procedmiento para eliminar un bien 
- CREATE PROCEDURE  Deletebien(
+ DELIMITER $$
+CREATE PROCEDURE  Deletebien(
 	IN bienId Int
 )
 BEGIN 
 	Delete from bienes 
-   	Where Id_Bienes = bienID;
+   	Where Id_Bienes = bienId;
 END $$
 
 
 -- -------------------------------Procedimiento para la tabla bienIndividual ------------------------------
 -- Procidemiento para registara un bien individual
+DELIMITER $$
 CREATE PROCEDURE RegisterBienIndividual(
     IN bienIndividualName VARCHAR(255),
     IN bienIndividualDescription TEXT,
@@ -212,12 +224,14 @@ BEGIN
 END$$
 
 -- Procedimiento para obtener todos los bienes individuales
+DELIMITER $$
 CREATE PROCEDURE GetAllBienesIndividuales()
 BEGIN
 		select * from BienIndividual;
 END $$
 
 -- Procedimiento para obtener bien individual por id
+DELIMITER $$
 CREATE PROCEDURE GetBienIndividualById(
 	IN bienIndividualId int
 )
@@ -227,6 +241,7 @@ BEGIN
 END $$
 
 -- Procedimiento para actualizar bien individual 
+DELIMITER $$
 CREATE PROCEDURE updateBienIndividual (
     IN bienIndividualId INT,
     IN bienIndividualName VARCHAR(255),
@@ -250,10 +265,11 @@ BEGIN
         Ultimo_mantenimiento = bienIndividualUltimoMantenimiento,
         Siguiente_mantenimiento = bienIndividualSiguienteMantenimiento,
         Id_Bienes = bienId
-    WHERE Id_BienIndividual = bienIndividualId;
+  WHERE Id_BienIndividual = bienIndividualId;
 END$$
 
 -- Procedimiento para eliminar un bien individual 
+DELIMITER $$
 CREATE PROCEDURE deleteBienIndividual (
     IN bienIndividualId INT
 )
@@ -265,38 +281,41 @@ END $$
 
 -- -------------------------------Procedimientos para la tabla centro deportivo-------------------------------
 -- Procedimiento para registar un centro deportivo 
+DELIMITER $$
 CREATE PROCEDURE RegisterCentroDeportivo (
+	IN idCentro INT,
     IN nombreCentro VARCHAR(255),
     IN direccionCentro VARCHAR(255),
-    IN telefonoCentro VARCHAR(50)
+    IN telefonoCentro VARCHAR(50),
+    IN emailCentro VARCHAR (150)
 )
 begin
-	insert into centro_deportivo (nombre, direccion, telefono) 
-    values (nombreCentro, direccionCentro, telefonoCentro);
+	insert into centro_deportivo (Id_Centro, Nombre, Direccion, Telefono, Email) 
+    values (idCentro, nombreCentro, direccionCentro, telefonoCentro, emailCentro);
 END $$
 
 -- Procedimiento para actualizar informacion del centro deportivo 
 CREATE PROCEDURE UpdateCentroDeportivo(
-    IN centroId INT,
+    IN idCentro INT,
     IN nombreCentro VARCHAR(255),
     IN direccionCentro VARCHAR(255),
     IN telefonoCentro VARCHAR(50)
 )
 begin
 	update centro_deportivo
-    Set nombre = nombreCentro,
-		direccion = direccionCentro,
-        telefono = telefonoCentro
-	where Id_Centro = centroId;
+    Set    nombre = nombreCentro,
+		   direccion = direccionCentro,
+		   telefono = telefonoCentro
+	where  Id_Centro = idCentro;
 END $$
 
 -- Procedimiento para eliminar un centro deportivo 
 CREATE PROCEDURE deleteCentroDeportivo(
-	    IN centroId INT
+	    IN idCentro INT
 )
 begin 
 	delete from centro_deportivo
-    where Id_Centro = centroId;
+    where Id_Centro = idCentro;
 END $$
 
 -- Procedimiento para obtener informacion de todos los centros 
@@ -307,22 +326,22 @@ END $$
 
 -- Procedimiento para obtener informacion por su id
 CREATE PROCEDURE GetCentroDeportivoById(
-    IN centroId INT
+    IN idCentro INT
 ) 
 begin 
 	select * from centro_deportivo
-    where Id_Centro =  centroId;
+    where Id_Centro =  idCentro;
 END $$
 
-/* Procedimientos para la tabla pago*/
+-- --------------------------------------------Procedimientos para la tabla pago--------------------------------------
 -- Procedimiento para registrar un nuevo pago
 CREATE PROCEDURE RegisterPago (
-    IN userId INT,           
+    IN userId BIGINT,           
     IN montoPago DECIMAL(10, 2),
     IN fechaPago DATE
 )
 BEGIN
-    INSERT INTO Pago (id_usuario, monto, fecha_pago)
+    INSERT INTO Pago (Id_Usuario, Monto, Fecha)
     VALUES (userId, montoPago, fechaPago);  
 END$$
 
@@ -332,9 +351,10 @@ CREATE PROCEDURE UpdatePago (
     IN montoPago DECIMAL(10, 2),
     IN fechaPago DATE
 )
-Update Pago 
+BEGIN
+	Update Pago 
 	set monto = montoPago,
-		fecha_pago = fechaPago
+		Fecha = fechaPago
 	where  Id_Pago = pagoId;
 END $$
 
@@ -354,7 +374,7 @@ BEGIN
 END$$
 
 
-/* Procedimientos para la tabla Venta*/
+-- ----------------------------------------Procedimientos para la tabla Venta-----------------------------------------
 -- Procedimiento para un nuevo registro
 CREATE PROCEDURE RegisterVenta (
     IN fechaVenta DATE,
