@@ -10,10 +10,30 @@ DROP PROCEDURE IF EXISTS GetAllProducts;
 DROP PROCEDURE IF EXISTS GetProductById;
 DROP PROCEDURE IF EXISTS UpdateProduct;
 DROP PROCEDURE IF EXISTS DeleteProduct;
-DROP PROCEDURE IF EXISTS RegisterPayment;
-DROP PROCEDURE IF EXISTS GetAllPayments;
-DROP PROCEDURE IF EXISTS GetPaymentsByUserId;
-DROP PROCEDURE IF EXISTS GetProductsByCenterId;
+DROP PROCEDURE IF EXISTS RegisterBien;
+DROP PROCEDURE IF EXISTS GetAllBienes;
+DROP PROCEDURE IF EXISTS GetBienesById;
+DROP PROCEDURE IF EXISTS UpdateBien;
+DROP PROCEDURE IF EXISTS Deletebien;
+DROP PROCEDURE IF EXISTS RegisterBienIndividual;
+DROP PROCEDURE IF EXISTS GetAllBienesIndividuales;
+DROP PROCEDURE IF EXISTS GetBienIndividualById;
+DROP PROCEDURE IF EXISTS updateBienIndividual;
+DROP PROCEDURE IF EXISTS deleteBienIndividual;
+DROP PROCEDURE IF EXISTS RegisterCentroDeportivo;
+DROP PROCEDURE IF EXISTS UpdateCentroDeportivo;
+DROP PROCEDURE IF EXISTS deleteCentroDeportivo;
+DROP PROCEDURE IF EXISTS GetAllCentrosDeportivos;
+DROP PROCEDURE IF EXISTS GetCentroDeportivoById;
+DROP PROCEDURE IF EXISTS RegisterPago;
+DROP PROCEDURE IF EXISTS UpdatePago;
+DROP PROCEDURE IF EXISTS DeletePago;
+DROP PROCEDURE IF EXISTS GetAllPagos;
+DROP PROCEDURE IF EXISTS RegisterVenta;
+DROP PROCEDURE IF EXISTS GetAllVentas;
+DROP PROCEDURE IF EXISTS GetVentaUsuarioById;
+DROP PROCEDURE IF EXISTS GetVentaProductoById;
+DROP PROCEDURE IF EXISTS DeleteVenta;
 
 -- --------------------------------------Procedimientos para la tabla usuarios-----------------------------------------
 -- Procedimiento para registrar un nuevo usuario
