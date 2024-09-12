@@ -1,96 +1,102 @@
 -- Pruebas unitarias
-USE DataSport;
+USE datasport;
 
 SHOW TABLES;
 
 -- Comprobar la estructura de las tablas
 DESCRIBE centro_deportivo;
-DESCRIBE administrador;
-DESCRIBE empleado;
-DESCRIBE usuario;
-DESCRIBE producto;
-DESCRIBE membresia;
-DESCRIBE pago;
-DESCRIBE historial_pago;
-DESCRIBE venta;
-DESCRIBE inventario;
+DESCRIBE Administrador;
+DESCRIBE Empleado;
+DESCRIBE Usuario;
+DESCRIBE Producto;
+DESCRIBE bienes;
+DESCRIBE BienIndividual;
+DESCRIBE Pago;
+DESCRIBE Historial_Pago;
+DESCRIBE Venta;
 
 -- Comprobar las claves forÃ¡neas
-SHOW CREATE TABLE administrador;
-SHOW CREATE TABLE empleado;
-SHOW CREATE TABLE usuario;
-SHOW CREATE TABLE producto;
-SHOW CREATE TABLE membresia;
-SHOW CREATE TABLE pago;
-SHOW CREATE TABLE historial_pago;
-SHOW CREATE TABLE venta;
-SHOW CREATE TABLE inventario;
+SHOW CREATE TABLE centro_deportivo;
+SHOW CREATE TABLE Administrador;
+SHOW CREATE TABLE Empleado;
+SHOW CREATE TABLE Usuario;
+SHOW CREATE TABLE Producto;
+SHOW CREATE TABLE bienes;
+SHOW CREATE TABLE BienIndividual;
+SHOW CREATE TABLE Pago;
+SHOW CREATE TABLE Historial_Pago;
+SHOW CREATE TABLE Venta;
 
 -- Comprobar los datos insertados
 SELECT * FROM centro_deportivo;
-SELECT * FROM administrador;
-SELECT * FROM empleado;
-SELECT * FROM usuario;
-SELECT * FROM producto;
-SELECT * FROM membresia;
-SELECT * FROM pago;
-SELECT * FROM historial_pago;
-SELECT * FROM venta;
-SELECT * FROM inventario;
+SELECT * FROM Administrador;
+SELECT * FROM Empleado;
+SELECT * FROM Usuario;
+SELECT * FROM Producto;
+SELECT * FROM bienes;
+SELECT * FROM BienIndividual;
+SELECT * FROM Pago;
+SELECT * FROM Historial_Pago;
+SELECT * FROM Venta;
 
 -- Comprobar las vistas
-SELECT * FROM vista_centros_administradores;
-SELECT * FROM vista_centros_empleados;
-SELECT * FROM vista_usuarios_membresias;
-SELECT * FROM vista_productos_centros;
-SELECT * FROM vista_pagos_usuarios;
-SELECT * FROM vista_historial_pagos;
-SELECT * FROM vista_ventas;
-SELECT * FROM vista_inventario_centros;
+SELECT * FROM Vista_ProductosVendidosPorCentro;
+SELECT * FROM Vista_UsuariosActivos;
+SELECT * FROM Vista_EmpleadosPorCentro;
+SELECT * FROM Vista_HistorialPagosPorUsuario;
+SELECT * FROM Vista_ProductosStockBajo;
+SELECT * FROM Vista_BienesActivosYCcondicion;
+SELECT * FROM Vista_BienesPorCondicionYEstado;
+SELECT * FROM Vista_PagosYVentasPorUsuario;
 
--- Prueba del trigger ActualizarFechaUsuario
-UPDATE usuario SET nombre = 'Pedro Actualizado' WHERE id_usuario = 1;
-SELECT nombre, fecha_actualizacion FROM usuario WHERE id_usuario = 1;
+-- Consultar el stock del producto después de la venta
+SELECT Stock FROM Producto WHERE Nombre = 'Balón de Fútbol';
 
--- Prueba del trigger ActualizarStockProducto y VerificarStockAntesVenta
-INSERT INTO venta (fecha, id_producto, id_usuario, cantidad) VALUES ('2024-05-01', 1, 1, 2);
-SELECT stock FROM producto WHERE id_producto = 1;
+-- Actualizar el empleado
+UPDATE Empleado 
+SET Nombres = 'Empleado Modificado' 
+WHERE Cedula_Empleado = 41911177;
 
--- Prueba del trigger ActualizarEstadoMembresia
-INSERT INTO venta (fecha, id_producto, id_usuario, cantidad) VALUES ('2024-06-01', 2, 2, 1);
-SELECT tipo, fecha_inicio, fecha_fin FROM membresia WHERE id_usuario = 2;
+-- Consultar la fecha de actualización del empleado
+SELECT Fecha_Actualizacion FROM Empleado WHERE Cedula_Empleado = 18463924;
 
--- Prueba del trigger EstablecerFechaCreacionAdmin y ActualizarFechaActualizacionAdmin
-INSERT INTO administrador (nombre, direccion, telefono, email, contrasena, id_centro) VALUES ('Nuevo Admin', 'Calle 123', '123456789', 'nuevo@correo.com', 'password', 1);
-SELECT fecha_creacion, fecha_actualizacion FROM administrador WHERE nombre = 'Nuevo Admin';
-UPDATE administrador SET nombre = 'Admin Actualizado' WHERE nombre = 'Nuevo Admin';
-SELECT fecha_creacion, fecha_actualizacion FROM administrador WHERE nombre = 'Admin Actualizado';
+-- Consultar el estado del usuario después de eliminar
+SELECT Estado FROM Usuario WHERE Id_Usuario = 2;
 
--- Prueba del trigger EstablecerFechaCreacionEmpleado y ActualizarFechaActualizacionEmpleado
-INSERT INTO empleado (nombre, direccion, telefono, email, contrasena, id_centro) VALUES ('Nuevo Empleado', 'Calle 456', '987654321', 'empleado@correo.com', 'password', 1);
-SELECT fecha_creacion, fecha_actualizacion FROM empleado WHERE nombre = 'Nuevo Empleado';
-UPDATE empleado SET nombre = 'Empleado Actualizado' WHERE nombre = 'Nuevo Empleado';
-SELECT fecha_creacion, fecha_actualizacion FROM empleado WHERE nombre = 'Empleado Actualizado';
+-- Intentar insertar una venta con una cantidad negativa
+INSERT INTO Venta (Fecha, Id_Producto, Id_Usuario, Cantidad) 
+VALUES (CURDATE(), (SELECT Id_Producto FROM Producto WHERE Nombre = 'Raqueta de Tenis'), 1, -1);
+/*DEBE ARROJAR ERROR YA QUE NO SE PUEDEN INSERTAR DATOS NUMERICOS NEGATIVOSS*/
 
--- Prueba de los procedimientos almacenados
-CALL RegisterUser('John Doe', 'john.doe@example.com', 'password');
-CALL GetAllUsers();
-CALL GetUserById(1);
-CALL UpdateUser(1, 'John Updated', 'john.updated@example.com', 'newpassword');
-CALL DeleteUser(1);
+-- Intentar insertar un bien con una condición inválida
+INSERT INTO BienIndividual (Nombre, Descripcion, fecha_adquisición, Estado, Condicion, Imagen, Ultimo_mantenimiento, Id_Bienes)
+VALUES ('Cuerdas', 'Descripción Test', CURDATE(), 'Activo', 'Invalido', 'imagen.jpg', CURDATE(), 1);
+/*ES UN BIEN QUE NO TIENE UNA CONDICION VALIDA, DEBE ARROJAR ERROR*/
 
-CALL RegisterProduct('Product A', 10, 9.99);
-CALL GetAllProducts();
-CALL GetProductById(1);
-CALL UpdateProduct(1, 'Product A Updated', 20, 19.99);
-CALL DeleteProduct(1);
+-- Consultar el historial de pagos
+SELECT * FROM Historial_Pago WHERE Id_Pago = (SELECT LAST_INSERT_ID());
+-- Debería mostrar el registro insertado en `Historial_Pago` si el trigger funciona correctamente
 
-CALL RegisterPayment(1, 50.00, '2024-07-01');
-CALL GetAllPayments();
-CALL GetPaymentsByUserId(1);
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_ProductosVendidosPorCentro;
+-- Debería mostrar los datos que coinciden con la inserción realizada
 
-CALL RegisterMembership(1, 'Premium', '2024-07-01', '2025-07-01');
-CALL GetAllMemberships();
-CALL GetMembershipByUserId(1);
-CALL UpdateMembership(1, 'Standard', '2024-08-01', '2025-08-01');
-CALL DeleteMembership(1);
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_UsuariosActivos;
+-- Debería mostrar solo 'Usuario Activo'
+
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_EmpleadosPorCentro;
+-- Debería mostrar el empleado con la información correcta
+
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_HistorialPagosPorUsuario;
+-- Debería mostrar el historial de pagos del 'Usuario Activo'
+
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_ProductosStockBajo;
+-- Debería mostrar el 'Producto Bajo Stock'
+
+-- Consultar la vista para verificar los resultados
+SELECT * FROM Vista_PagosYVentasPorUsuario;
+-- Debería mostrar el total de pagos y ventas del 'Usuario Activo'
