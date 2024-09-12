@@ -1,78 +1,67 @@
-USE DataSport;
-SHOW TRIGGERS LIKE '';
-DROP TRIGGER IF EXISTS ActualizarEstadoMembresia;
+use datasport;
+DROP TRIGGER ActualizarStockProductoDespuesDeVenta;
 
+-- ---------------Trigger para Actualizar el Stock de Productos después de una Venta---------------
 DELIMITER //
--- Trigger para actualizar la fecha de actualización en la tabla Usuario
-CREATE TRIGGER ActualizarFechaUsuario
-BEFORE UPDATE ON Usuario
-FOR EACH ROW
-BEGIN
-    SET NEW.Fecha_Actualizacion = NOW();
-END //
 
--- Trigger para actualizar el stock del producto después de cada venta
-DELIMITER //
-CREATE TRIGGER ActualizarStockProducto
-AFTER INSERT ON VENTA
+CREATE TRIGGER ActualizarStockProductoDespuesDeVenta
+AFTER INSERT ON Venta
 FOR EACH ROW
 BEGIN
     UPDATE Producto
-    SET Stock = Stock - NEW.Cantidad
-    WHERE Id_Producto = NEW.ID_Producto;
+    SET Stock = Stock - 1 
+    WHERE Id_Producto = NEW.Id_Producto;
 END//
 
--- Trigger para verificar el stock antes de una venta
+-- ---------------Trigger para Actualizar la Fecha de Actualización en Empleado---------------
 DELIMITER //
-CREATE TRIGGER VerificarStockAntesVenta
-BEFORE INSERT ON VENTA
+CREATE TRIGGER ActualizarFechaActualizacionEmpleado
+BEFORE UPDATE ON Empleado
 FOR EACH ROW
 BEGIN
-    DECLARE StockActual INT;
-    SELECT Stock INTO StockActual FROM Producto WHERE Id_Producto = NEW.ID_Producto;
+    SET NEW.Fecha_Actualizacion = NOW();
+END //
 
-    IF StockActual < NEW.Cantidad THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Stock insuficiente para la venta';
+-- ---------------Trigger para Validar la Condición de un Bien antes de Insertar en BienIndividual---------------
+DELIMITER //
+CREATE TRIGGER ValidarCondicionBien
+BEFORE INSERT ON BienIndividual
+FOR EACH ROW
+BEGIN
+    IF NEW.Condicion NOT IN ('Nuevo', 'Bien', 'Usado', 'Dañado') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Condición del bien no válida.';
     END IF;
 END //
 
--- Trigger para activar automáticamente la membresía de un usuario después de una venta
+-- ---------------Trigger para actualizar Estado de Usuario al eliminar un registro---------------
 DELIMITER //
-CREATE TRIGGER ActualizarEstadoMembresia
-AFTER INSERT ON VENTA
+CREATE TRIGGER ActualizarEstadoUsuarioDespuesDeEliminar
+AFTER DELETE ON Usuario
 FOR EACH ROW
 BEGIN
-    UPDATE Membresia
-    SET tipo = 'ACTIVO', fecha_inicio = CURDATE(), fecha_fin = DATE_ADD(CURDATE(), INTERVAL 1 YEAR)
-    WHERE Id_Usuario = NEW.Id_Usuario;
+    UPDATE Usuario
+    SET Estado = 'Inactivo'
+    WHERE Id_Usuario = OLD.Id_Usuario;
 END //
 
--- Trigger para establecer la fecha de creación y actualización al insertar un nuevo administrador
+-- ---------------Trigger para asegurar que la cantidad en Venta no sea negativa---------------
 DELIMITER //
-CREATE TRIGGER EstablecerFechasAdmin
-BEFORE INSERT ON Administrador
+CREATE TRIGGER VerificarCantidadVenta
+BEFORE INSERT ON Venta
 FOR EACH ROW
 BEGIN
-    SET NEW.Fecha_Creacion = NOW();
-    SET NEW.Fecha_Actualizacion = NOW();
-END //
+    IF NEW.Cantidad < 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La cantidad de venta no puede ser negativa.';
+    END IF;
+END//
 
--- Trigger para establecer la fecha de creación y actualización al insertar un nuevo empleado
+-- ---------------Trigger para actualizar el historial de pagos al insertar un nuevo pago---------------
 DELIMITER //
-CREATE TRIGGER EstablecerFechasEmpleado
-BEFORE INSERT ON Empleado
+CREATE TRIGGER ActualizarHistorialPago
+AFTER INSERT ON Pago
 FOR EACH ROW
 BEGIN
-    SET NEW.Fecha_Creacion = NOW();
-    SET NEW.Fecha_Actualizacion = NOW();
+    INSERT INTO Historial_Pago (Id_Usuario, Id_Pago)
+    VALUES (NEW.Id_Usuario, NEW.Id_Pago);
 END //
-
--- Trigger para establecer la fecha de creación y actualización al insertar un nuevo centro deportivo
-DELIMITER //
-CREATE TRIGGER EstablecerFechasCreacionCentro
-BEFORE INSERT ON centro_deportivo
-FOR EACH ROW
-BEGIN
-    SET NEW.Fecha_Creacion = NOW();
-    SET NEW.Fecha_Actualizacion = NOW();
-END //
+DELIMITER ;
