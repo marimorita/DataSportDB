@@ -166,7 +166,7 @@ BEGIN
     WHERE Id_Producto = productId;
 END$$
 
--- ------------------------------ Procedimiento para la tabala bienes ------------------------------
+-- ----------------------------------------Procedimiento para la tabala bienes----------------------------------------
 -- Procedimiento para registrar un bien 
 DELIMITER $$
 CREATE PROCEDURE RegisterBien (
@@ -224,7 +224,7 @@ BEGIN
 END $$
 
 
--- -------------------------------Procedimiento para la tabla bienIndividual ------------------------------
+-- ------------------------------------Procedimiento para la tabla bienIndividual-----------------------------------
 -- Procidemiento para registara un bien individual
 DELIMITER $$
 CREATE PROCEDURE RegisterBienIndividual(
@@ -299,7 +299,7 @@ BEGIN
 END $$
 
 
--- -------------------------------Procedimientos para la tabla centro deportivo-------------------------------
+-- ---------------------------------Procedimientos para la tabla centro deportivo------------------------------------
 -- Procedimiento para registar un centro deportivo 
 DELIMITER $$
 CREATE PROCEDURE RegisterCentroDeportivo (
@@ -315,36 +315,40 @@ begin
 END $$
 
 -- Procedimiento para actualizar informacion del centro deportivo 
+DELIMITER $$
 CREATE PROCEDURE UpdateCentroDeportivo(
     IN idCentro INT,
     IN nombreCentro VARCHAR(255),
     IN direccionCentro VARCHAR(255),
     IN telefonoCentro VARCHAR(50)
 )
-begin
-	update centro_deportivo
-    Set    nombre = nombreCentro,
-		   direccion = direccionCentro,
-		   telefono = telefonoCentro
-	where  Id_Centro = idCentro;
+BEGIN
+    UPDATE centro_deportivo
+    SET nombre = nombreCentro,
+        direccion = direccionCentro,
+        telefono = telefonoCentro
+    WHERE Id_Centro = idCentro;
 END $$
 
 -- Procedimiento para eliminar un centro deportivo 
+DELIMITER $$
 CREATE PROCEDURE deleteCentroDeportivo(
-	    IN idCentro INT
+    IN idCentro INT
 )
-begin 
-	delete from centro_deportivo
-    where Id_Centro = idCentro;
+BEGIN
+    DELETE FROM centro_deportivo
+    WHERE Id_Centro = idCentro;
 END $$
 
 -- Procedimiento para obtener informacion de todos los centros 
+DELIMITER $$
 CREATE PROCEDURE GetAllCentrosDeportivos ()
 begin 
 	select * from centro_deportivo;
 END $$
 
 -- Procedimiento para obtener informacion por su id
+DELIMITER $$
 CREATE PROCEDURE GetCentroDeportivoById(
     IN idCentro INT
 ) 
@@ -355,6 +359,7 @@ END $$
 
 -- --------------------------------------------Procedimientos para la tabla pago--------------------------------------
 -- Procedimiento para registrar un nuevo pago
+DELIMITER $$
 CREATE PROCEDURE RegisterPago (
     IN userId BIGINT,           
     IN montoPago DECIMAL(10, 2),
@@ -366,6 +371,7 @@ BEGIN
 END$$
 
 -- Procedimiento para actualizar pago 
+DELIMITER $$
 CREATE PROCEDURE UpdatePago (
     IN pagoId INT,         
     IN montoPago DECIMAL(10, 2),
@@ -379,6 +385,7 @@ BEGIN
 END $$
 
 -- Procedimiento para eliminar un pago 
+DELIMITER $$
 CREATE PROCEDURE DeletePago (   
 	IN pagoId INT
 )
@@ -388,6 +395,7 @@ begin
 END $$
 
 -- Procedimiento para obtener todos los pagos 
+DELIMITER $$
 CREATE PROCEDURE GetAllPagos ()
 BEGIN
     SELECT * FROM pago;
@@ -396,6 +404,7 @@ END$$
 
 -- ----------------------------------------Procedimientos para la tabla Venta-----------------------------------------
 -- Procedimiento para un nuevo registro
+DELIMITER $$
 CREATE PROCEDURE RegisterVenta (
     IN fechaVenta DATE,
     IN productId INT,
@@ -407,12 +416,14 @@ begin
 END $$
 
 -- Procedimiento para obtener todas las ventas
+DELIMITER $$
 CREATE PROCEDURE GetAllVentas()
 begin
 	select * from Venta;
 END $$
 
 -- Procedimiento para obtener venta por id de usuario 
+DELIMITER $$
 CREATE PROCEDURE GetVentaUsuarioById(
     IN userId BIGINT
 )
@@ -422,6 +433,7 @@ BEGIN
 END $$ 
 
 -- Procediemiento para obtener venta por id de producto 
+DELIMITER $$
 CREATE PROCEDURE GetVentaProductoById(   
 	IN productId INT
 )
@@ -431,6 +443,7 @@ begin
 END $$
 
 -- Procedimiento para eliminar una venta 
+DELIMITER $$
 CREATE PROCEDURE DeleteVenta(
 	IN ventaId int
 ) 

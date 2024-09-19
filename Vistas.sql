@@ -1,5 +1,6 @@
-Use datasport;
--- Vista de Productos Vendidos por Centro Deportivo
+use datasport;
+DROP VIEW IF EXISTS Vista_PagosYVentasPorUsuario;
+
 CREATE VIEW Vista_ProductosVendidosPorCentro AS
 SELECT 
     CD.Nombre AS Nombre_Centro,
@@ -15,7 +16,7 @@ JOIN
 JOIN 
     centro_deportivo CD ON P.Id_Centro = CD.Id_Centro;
 
--- Vista de Usuarios Activos
+-- ---------------------------------------------------------------------------------------------------------
 CREATE VIEW Vista_UsuariosActivos AS 
 SELECT
     U.Id_Usuario,
@@ -31,8 +32,8 @@ JOIN
     centro_deportivo CD ON U.Id_Centro = CD.Id_Centro
 WHERE 
     U.Estado = 'Activo';
-
--- Vista de Empleados por Centro Deportivo
+    
+-- ---------------------------------------------------------------------------------------------------------
 CREATE VIEW Vista_EmpleadosPorCentro AS
 SELECT 
     E.Cedula_Empleado,
@@ -46,7 +47,7 @@ FROM
 JOIN 
     centro_deportivo CD ON E.Id_Centro = CD.Id_Centro;
 
--- Vista de Historial de Pagos por Usuario
+-- ---------------------------------------------------------------------------------------------------------
 CREATE VIEW Vista_HistorialPagosPorUsuario AS
 SELECT    
     U.Id_Usuario,
@@ -64,20 +65,61 @@ JOIN
     Pago P ON HP.Id_Pago = P.Id_Pago
 JOIN 
     centro_deportivo CD ON U.Id_Centro = CD.Id_Centro;
+    
+    
+-- ---------------------------------------------------------------------------------------------------------
+CREATE VIEW Vista_ProductosStockBajo AS
+SELECT 
+    P.Nombre AS Nombre_Producto,
+    P.Stock,
+    CD.Nombre AS Nombre_Centro
+FROM 
+    Producto P
+JOIN 
+    centro_deportivo CD ON P.Id_Centro = CD.Id_Centro
+WHERE 
+    P.Stock < 10;  
 
--- Vista de Bienes Activos y su Condición
+-- ---------------------------------------------------------------------------------------------------------
 CREATE VIEW Vista_BienesActivosYCcondicion AS
 SELECT 
     BI.Id_BienIndividual,
     BI.Nombre,
     BI.Condicion,
-    B.Nombre AS Nombre_BienGeneral,
-    CD.Nombre AS Nombre_Centro
+    B.Nombre AS Nombre_BienGeneral
 FROM
     BienIndividual BI
 JOIN 
     bienes B ON BI.Id_Bienes = B.Id_Bienes
-JOIN
-    centro_deportivo CD ON B.Id_Centro = CD.Id_Centro
 WHERE
     BI.Estado = 'Activo';
+
+-- ---------------------------------------------------------------------------------------------------------
+CREATE VIEW Vista_BienesPorCondicionYEstado AS
+SELECT 
+    B.Nombre AS Nombre_BienGeneral,
+    BI.Condicion,
+    BI.Estado,
+    COUNT(BI.Id_BienIndividual) AS Cantidad
+FROM 
+    BienIndividual BI
+JOIN 
+    bienes B ON BI.Id_Bienes = B.Id_Bienes
+GROUP BY 
+    B.Nombre, BI.Condicion, BI.Estado;
+
+-- ---------------------------------------------------------------------------------------------------------
+CREATE VIEW Vista_PagosYVentasPorUsuario AS
+SELECT 
+    U.Nombres AS Nombre_Usuario,
+    U.Apellidos,
+    COALESCE(SUM(P.Monto), 0) AS Total_Pagos,
+    COALESCE(COUNT(V.Id_Venta), 0) AS Total_Ventas
+FROM 
+    Usuario U
+LEFT JOIN 
+    Pago P ON U.Id_Usuario = P.Id_Usuario
+LEFT JOIN 
+    Venta V ON U.Id_Usuario = V.Id_Usuario
+GROUP BY 
+    U.Id_Usuario, U.Nombres, U.Apellidos;

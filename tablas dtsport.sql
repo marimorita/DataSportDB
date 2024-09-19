@@ -1,12 +1,11 @@
-/*Base de datos principal (Tablas y alter table)
-Responsables: Mariana y Andres*/
+/*Base de datos principal (Tablas y alter table)*/
 SELECT USER();
 SELECT * FROM bienes;
 SELECT * FROM Usuario WHERE Id_Usuario = 1;
 
 CREATE DATABASE datasport;
 DROP DATABASE IF EXISTS datasport;
-drop table if exists bienes;
+drop table if exists BienIndividual;
 USE datasport;
 
 CREATE TABLE centro_deportivo (
@@ -80,7 +79,7 @@ CREATE TABLE bienes (
     );
     
 CREATE TABLE BienIndividual (
-    Id_BienIndividual INT PRIMARY KEY,
+    Id_BienIndividual INT PRIMARY KEY AUTO_INCREMENT,
     Nombre VARCHAR(255) NOT NULL,
     Descripcion TEXT,
     fecha_adquisición DATE,
@@ -92,15 +91,6 @@ CREATE TABLE BienIndividual (
     Id_Bienes INT,
     CONSTRAINT FK_Bien_Individual FOREIGN KEY (Id_Bienes) REFERENCES bienes(Id_Bienes)
 );
-
-/*CREATE TABLE Membresia (
-    Id_Membresia INT PRIMARY KEY AUTO_INCREMENT,
-    tipo ENUM('ACTIVO', 'INACTIVO') NOT NULL,
-    Id_Usuario INT,
-    Fecha_Inicio DATE,
-    Fecha_Fin DATE,
-    CONSTRAINT FK_Usuario_Membresia FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Usuario)
-);*/
 
 CREATE TABLE Pago (
     Id_Pago INT PRIMARY KEY AUTO_INCREMENT,
@@ -114,7 +104,7 @@ CREATE TABLE Historial_Pago (
     Id_Historial INT PRIMARY KEY AUTO_INCREMENT,
     Id_Usuario bigint,
     Id_Pago INT,
-	CONSTRAINT HISTORIAL_PAGO_ibfk_1 FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Usuario)
+	CONSTRAINT FK_Historial_Pago_Usuario FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Usuario)
 );
 
 CREATE TABLE Venta (
@@ -122,29 +112,47 @@ CREATE TABLE Venta (
     Fecha DATE NOT NULL,
     Id_Producto INT,
     Id_Usuario bigint,
-    FOREIGN KEY (Id_Producto) REFERENCES Producto(Id_Producto),
-    FOREIGN KEY (Id_Usuario) REFERENCES Usuario (Id_Usuario)
+    CONSTRAINT FK_Venta_Producto FOREIGN KEY (Id_Producto) REFERENCES Producto (Id_Producto),
+   CONSTRAINT FK_Venta_Usuario FOREIGN KEY (Id_Usuario) REFERENCES Usuario (Id_Usuario)
 );
 
-CREATE TABLE Inventario (
+CREATE TABLE Observaciones ( 
+	Id_Observaciones INT PRIMARY KEY AUTO_INCREMENT,
+    Rol VARCHAR(100) Not null,
+	Nombre VARCHAR(100),
+	Motivo VARCHAR(100), 
+	Descripcion TEXT,
+    Fecha DATE NOT NULL
+);
+
+/*CREATE TABLE Inventario (
     Id_Inventario INT PRIMARY KEY AUTO_INCREMENT,
     Nombre VARCHAR(100) NOT NULL,
     Cantidad bigint,
     Estado ENUM('Disponible', 'Prestado', 'Extraviado'),
     Id_Centro INT,
     FOREIGN KEY (Id_Centro) REFERENCES centro_deportivo (Id_Centro)
-);
+);*/
+/*CREATE TABLE Membresia (
+    Id_Membresia INT PRIMARY KEY AUTO_INCREMENT,
+    tipo ENUM('ACTIVO', 'INACTIVO') NOT NULL,
+    Id_Usuario INT,
+    Fecha_Inicio DATE,
+    Fecha_Fin DATE,
+    CONSTRAINT FK_Usuario_Membresia FOREIGN KEY (Id_Usuario) REFERENCES Usuario(Id_Usuario)
+);*/
 
+Alter table BienIndividual drop column Siguiente_mantenimiento;
+ALTER TABLE Empleado ADD COLUMN Fecha_Actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ALTER TABLE Venta ADD COLUMN Cantidad Int;
+
+ALter table BienIndividual modify Id_BienIndividual int Primary key AUTO_INCREMENT;
 ALTER TABLE bienes DROP COLUMN Cantidad;
 ALTER TABLE Producto modify Precio decimal (10,2);
 ALTER TABLE Usuario ADD COLUMN Fecha_Actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-ALTER TABLE VENTA ADD COLUMN Cantidad Int;
-/*ALTER TABLE Membresia ADD COLUMN Fecha_Creacion DATE;
-ALTER TABLE Membresia ADD COLUMN Fecha_Actualizacio DATE;*/
 ALTER TABLE Administrador ADD COLUMN Fecha_Creacion DATE;
 ALTER TABLE Administrador ADD COLUMN Fecha_Actualizacion DATE;
 ALTER TABLE Empleado ADD COLUMN Fecha_Creacion DATE;
-ALTER TABLE Empleado ADD COLUMN Fecha_Actualizacion DATE;
 ALTER TABLE centro_deportivo ADD COLUMN Fecha_Creacion DATE;
 ALTER TABLE centro_deportivo ADD COLUMN Fecha_Actualizacion DATE;
 ALTER TABLE Producto ADD COLUMN Estado enum ('en venta', 'deshabilitado');   

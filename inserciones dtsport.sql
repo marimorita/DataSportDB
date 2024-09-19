@@ -39,38 +39,35 @@ VALUES
 (1, 'Caminadora' ,'Caminadora eléctrica de alto rendimiento con múltiples niveles de velocidad', '2023-06-20', 'Activo', 'Nuevo', 'https://res.cloudinary.com/dlezql4zq/image/upload/v1723761220/samples/people/smiling-man.jpg ', '2023-07-20', '2024-08-09', 1),
 (2,'Cuerdas', 'Cuerdas de batalla para entrenamiento funcional', '2022-12-02', 'Activo', 'Bien', 'https://res.cloudinary.com/dlezql4zq/image/upload/v1723761220/samples/sheep.jpg', '2023-05-04', '2024-09-06', 2 ),
 (3, 'Bicicletas estáticas', 'Bicicletas estáticas para entrenamiento cardiovascular', '2021-10-28', 'Inactivo', 'Dañado', 'https://res.cloudinary.com/dlezql4zq/image/upload/v1723761219/samples/animals/reindeer.jpg', '2022-07-30', '2023-12-12', 3),
-(4, 'Mancuernas Ajustables', 'Mancuernas ajustables con sistema de discos intercambiables', '2024-09-09', 'Inactivo', 'Usado', 'https://res.cloudinary.com/dlezql4zq/image/upload/v1723761219/samples/ecommerce/analog-classic.jpg' '2005-09-27', '2010-09-16',4 );
+(4, 'Mancuernas Ajustables', 'Mancuernas ajustables con sistema de discos intercambiables', '2024-09-09', 'Inactivo', 'Usado', 'https://res.cloudinary.com/dlezql4zq/image/upload/v1723761219/samples/ecommerce/analog-classic.jpg', '2005-09-27', '2010-09-16', 4);
 
--- Insertar datos en la tabla PAGO
-INSERT INTO PAGO (Monto, Fecha, Id_Usuario) VALUES 
+-- Insertar datos en la tabla Pago
+INSERT INTO Pago (Monto, Fecha, Id_Usuario) VALUES 
 (50.00, '2024-01-15', 1),
 (75.00, '2024-02-15', 2),
-(100.00, '2024-03-15', 3),
-(125.00, '2024-04-15', 4);
+(100.00, '2024-03-15', 3);
 
 -- Insertar datos en la tabla HISTORIAL_PAGO
-INSERT INTO HISTORIAL_PAGO (Id_Usuario, ID_Pago) VALUES 
+INSERT INTO Historial_Pago (Id_Usuario, Id_Pago) VALUES 
 (1, 1),
 (2, 2),
-(3, 3),
-(4, 4);
+(3, 3);
 
 -- Insertar datos en la tabla VENTA
-INSERT INTO VENTA (Fecha, ID_Producto, Id_Usuario) VALUES 
+INSERT INTO Venta (Fecha, Id_Producto, Id_Usuario) VALUES 
 ('2024-01-20', 1, 1),
-('2024-02-20', 2, 2),
-('2024-03-20', 3, 3),
-('2024-04-20', 4, 4);
+('2024-02-20', 2, 2);
 
--- Insertar datos en la tabla INVENTARIO
-INSERT INTO INVENTARIO (Nombre, Cantidad, Estado, Id_Centro) VALUES 
-('Balón de Baloncesto', 40, 'Disponible', 1),
-('Cinta de Correr', 5, 'Disponible', 2),
-('Mancuernas', 25, 'Disponible', 1),
-('Elíptica', 8, 'Disponible', 2);
+
+-- Insertar datos en la tabla Observaciones
+INSERT INTO Observaciones (Rol, Nombre, Motivo, Descripcion, Fecha) VALUES 
+('Admin', 'Pepe', 'Enfermedad', 'Pepe se enfermo de la colita y se fue a la casa', '2024-09-27'),
+('Empleado', 'Camila', 'Desaseo', 'Camila se fue sin hacer el aseo', '2024-10-28'),
+('Admin', 'Juancho', 'Accidente', 'Juancho se le calló un disco en el tobillo', '2024-12-26');
+
 
 set sql_safe_updates = 0;
-delete from empleado;
+delete from BienIndividual;
 set sql_safe_updates = 1;
 
 SELECT * FROM bienes;
