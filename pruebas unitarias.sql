@@ -14,6 +14,7 @@ DESCRIBE BienIndividual;
 DESCRIBE Pago;
 DESCRIBE Historial_Pago;
 DESCRIBE Venta;
+DESCRIBE Observaciones;
 
 -- Comprobar las claves forÃ¡neas
 SHOW CREATE TABLE centro_deportivo;
@@ -38,6 +39,7 @@ SELECT * FROM BienIndividual;
 SELECT * FROM Pago;
 SELECT * FROM Historial_Pago;
 SELECT * FROM Venta;
+SELECT * FROM Observaciones;
 
 -- Comprobar las vistas
 SELECT * FROM Vista_ProductosVendidosPorCentro;
@@ -48,6 +50,7 @@ SELECT * FROM Vista_ProductosStockBajo;
 SELECT * FROM Vista_BienesActivosYCcondicion;
 SELECT * FROM Vista_BienesPorCondicionYEstado;
 SELECT * FROM Vista_PagosYVentasPorUsuario;
+SELECT * FROM Vista_ObservacionesRecientes;
 
 -- Consultar el stock del producto después de la venta
 SELECT Stock FROM Producto WHERE Nombre = 'Balón de Fútbol';

@@ -145,15 +145,3 @@ CREATE TABLE Observaciones (
 Alter table BienIndividual drop column Siguiente_mantenimiento;
 ALTER TABLE Empleado ADD COLUMN Fecha_Actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 ALTER TABLE Venta ADD COLUMN Cantidad Int;
-
-ALter table BienIndividual modify Id_BienIndividual int Primary key AUTO_INCREMENT;
-ALTER TABLE bienes DROP COLUMN Cantidad;
-ALTER TABLE Producto modify Precio decimal (10,2);
-ALTER TABLE Usuario ADD COLUMN Fecha_Actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-ALTER TABLE Administrador ADD COLUMN Fecha_Creacion DATE;
-ALTER TABLE Administrador ADD COLUMN Fecha_Actualizacion DATE;
-ALTER TABLE Empleado ADD COLUMN Fecha_Creacion DATE;
-ALTER TABLE centro_deportivo ADD COLUMN Fecha_Creacion DATE;
-ALTER TABLE centro_deportivo ADD COLUMN Fecha_Actualizacion DATE;
-ALTER TABLE Producto ADD COLUMN Estado enum ('en venta', 'deshabilitado');   
-ALTER TABLE Usuario ADD COLUMN Estado enum ('inactivo', 'activo', 'reportado');

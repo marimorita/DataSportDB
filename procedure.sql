@@ -453,3 +453,36 @@ begin
 END $$
 
 DELIMITER ;
+
+-- ----------------------------------------Procedimientos para la tabla Observaciones-----------------------------------------
+DELIMITER $$
+CREATE PROCEDURE RegistrarObservacion(
+    IN p_Rol VARCHAR(100),
+    IN p_Nombre VARCHAR(100),
+    IN p_Motivo VARCHAR(100),
+    IN p_Descripcion TEXT,
+    IN p_Fecha DATE
+)
+BEGIN
+    INSERT INTO Observaciones (Rol, Nombre, Motivo, Descripcion, Fecha)
+    VALUES (p_Rol, p_Nombre, p_Motivo, p_Descripcion, p_Fecha);
+END $$
+
+DELIMITER $$
+CREATE PROCEDURE ActualizarObservacion(
+    IN p_Id_Observaciones INT,
+    IN p_Rol VARCHAR(100),
+    IN p_Nombre VARCHAR(100),
+    IN p_Motivo VARCHAR(100),
+    IN p_Descripcion TEXT,
+    IN p_Fecha DATE
+)
+BEGIN
+    UPDATE Observaciones
+    SET Rol = p_Rol,
+        Nombre = p_Nombre,
+        Motivo = p_Motivo,
+        Descripcion = p_Descripcion,
+        Fecha = p_Fecha
+    WHERE Id_Observaciones = p_Id_Observaciones;
+END $$

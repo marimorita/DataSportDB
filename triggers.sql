@@ -3,7 +3,6 @@ DROP TRIGGER ActualizarStockProductoDespuesDeVenta;
 
 -- ---------------Trigger para Actualizar el Stock de Productos después de una Venta---------------
 DELIMITER //
-
 CREATE TRIGGER ActualizarStockProductoDespuesDeVenta
 AFTER INSERT ON Venta
 FOR EACH ROW

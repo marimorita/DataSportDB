@@ -123,3 +123,8 @@ LEFT JOIN
     Venta V ON U.Id_Usuario = V.Id_Usuario
 GROUP BY 
     U.Id_Usuario, U.Nombres, U.Apellidos;
+    
+-- ---------------------------------------------------------------------------------------------------------
+CREATE VIEW Vista_ObservacionesRecientes AS
+	SELECT * FROM Observaciones
+WHERE Fecha >= CURDATE() - INTERVAL 30 DAY;
